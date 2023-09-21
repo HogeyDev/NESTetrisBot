@@ -10,6 +10,7 @@ export class Game {
     score: number;
     lines: number;
     frames: number;
+	startingTime: number;
     board: Board;
     activePiece: Piece;
     previewPiece: Piece;
@@ -21,6 +22,7 @@ export class Game {
         this.activePiece = this.generatePiece();
         this.previewPiece = this.generatePiece();
         this.frames = 0;
+		this.startingTime = new Date().getTime();
     }
     getPrintable() {
         console.log(`Board State: ${this.board.boardState}`);
@@ -35,7 +37,8 @@ export class Game {
         if (mat === null) throw new Error();
         if (mat.length == 3) console.log();
         console.log('='.repeat(20));
-        console.log(`FRAMES: ${this.frames}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}`);
+		let realTime = (new Date().getTime() - this.startingTime) / 1000;
+        console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${this.frames / realTime}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}`);
         console.log('='.repeat(20));
         // str += this.previewPiece.getPrintableWithWhiteSpace();
         // board
@@ -92,7 +95,7 @@ export class Game {
         if (pieceMatrix === null) {
             throw new Error("Piece Matrix is Null");
         }
-        console.log('checking for board collision');
+        // console.log('checking for board collision');
         for (let iy = 0; iy < pieceMatrix.length; iy++) {
             for (let ix = 0; ix < pieceMatrix[0].length; ix++) {
                 let x: number = this.activePiece.x + ix;

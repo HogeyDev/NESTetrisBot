@@ -1,8 +1,10 @@
+SRCFILES = $(shell find src | grep .ts)
+
 .PHONY: clean
 
 all: compile run
 
-compile:
+compile: $(SRCFILES)
 	tsc
 
 live:
