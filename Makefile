@@ -8,7 +8,8 @@ compile: $(SRCFILES)
 	tsc
 
 live:
-	tsc -w
+	tsc -w &
+	nodemon build/index.js
 
 electron:
 	electron build/index.js

@@ -10,7 +10,7 @@ export class Game {
     score: number;
     lines: number;
     frames: number;
-	startingTime: number;
+    startingTime: number;
     board: Board;
     activePiece: Piece;
     previewPiece: Piece;
@@ -22,7 +22,7 @@ export class Game {
         this.activePiece = this.generatePiece();
         this.previewPiece = this.generatePiece();
         this.frames = 0;
-		this.startingTime = new Date().getTime();
+        this.startingTime = new Date().getTime();
     }
     getPrintable() {
         console.log(`Board State: ${this.board.boardState}`);
@@ -37,7 +37,7 @@ export class Game {
         if (mat === null) throw new Error();
         if (mat.length == 3) console.log();
         console.log('='.repeat(20));
-		let realTime = (new Date().getTime() - this.startingTime) / 1000;
+        let realTime = (new Date().getTime() - this.startingTime) / 1000;
         console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${this.frames / realTime}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}`);
         console.log('='.repeat(20));
         // str += this.previewPiece.getPrintableWithWhiteSpace();
@@ -69,7 +69,7 @@ export class Game {
         return new Piece(Math.floor(pieceRng.float() * 7));
     }
     tick() {
-		let gravityFrames = getFramesUntilPieceDrop(this.level)
+        let gravityFrames = getFramesUntilPieceDrop(this.level)
         if (this.activePiece.frames % gravityFrames === gravityFrames - 1) {
             if (this.pieceCanDrop()) {
                 this.activePiece.y++;

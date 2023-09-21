@@ -1,3 +1,11 @@
+export const FRAME_TIMELINES = {
+    '30HZ': 'X.',
+    '20HZ': 'X..',
+    '15HZ': 'X...',
+    '12HZ': 'X....',
+    '10HZ': 'X.....',
+}
+
 export function getFramesUntilPieceDrop(level: number) {
     let frames: number = 0;
     if (level == 18) frames = 3;

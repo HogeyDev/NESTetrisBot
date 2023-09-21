@@ -6,6 +6,9 @@ export class Board {
     constructor(boardState = "0".repeat(200)) {
         this.boardState = boardState;
     }
+    clone() {
+        return new Board(this.boardState.slice());
+    }
     setMinoXY(value: number | string, x: number, y: number) {
         return replaceAt(this.boardState, y * 10 + x, value.toString());
     }
