@@ -11,7 +11,7 @@ function runInConsole() {
         game.tick();
         console.clear();
         console.log(game.getPrintable());
-    }, 1000 / 15);
+    }, 1000 / 60);
 }
 
 runInConsole();

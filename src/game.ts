@@ -35,7 +35,7 @@ export class Game {
         if (mat === null) throw new Error();
         if (mat.length == 3) console.log();
         console.log('='.repeat(20));
-        console.log(`LEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}`);
+        console.log(`FRAMES: ${this.frames}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}`);
         console.log('='.repeat(20));
         // str += this.previewPiece.getPrintableWithWhiteSpace();
         // board
@@ -66,7 +66,7 @@ export class Game {
         return new Piece(Math.floor(pieceRng.float() * 7));
     }
     tick() {
-        if (this.frames % getFramesUntilPieceDrop(this.level) == 0) {
+        if (this.activePiece.frames % getFramesUntilPieceDrop(this.level) == 0) {
             if (this.pieceCanDrop()) {
                 this.activePiece.y++;
             } else {
@@ -77,6 +77,7 @@ export class Game {
                 }
             }
         }
+        this.activePiece.frames++;
         this.frames++;
     }
     pieceCanDrop() {

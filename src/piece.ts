@@ -13,11 +13,13 @@ export class Piece {
     rotationState: number;
     y: number;
     x: number;
+    frames: number;
     constructor(pieceId = Math.floor(Math.random() * 7)) {
         this.pieceId = pieceId;
         this.rotationState = 0;
         this.y = this.getName() == "I" ? -2 : -1;
         this.x = 3;
+        this.frames = 0;
     }
     getPrintableWithWhiteSpace() {
         let pieceMatrix = this.getMatrix();
