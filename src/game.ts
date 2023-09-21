@@ -66,7 +66,8 @@ export class Game {
         return new Piece(Math.floor(pieceRng.float() * 7));
     }
     tick() {
-        if (this.activePiece.frames % getFramesUntilPieceDrop(this.level) == 0) {
+		let gravityFrames = getFramesUntilPieceDrop(this.level)
+        if (this.activePiece.frames % gravityFrames === gravityFrames - 1) {
             if (this.pieceCanDrop()) {
                 this.activePiece.y++;
             } else {
