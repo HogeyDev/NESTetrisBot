@@ -8,8 +8,11 @@ compile:
 live:
 	tsc -w
 
-run:
+electron:
 	electron build/index.js
+
+run:
+	node build/index.js
 
 clean:
 	rm build/*.js

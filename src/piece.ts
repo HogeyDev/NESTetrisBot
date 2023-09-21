@@ -16,8 +16,30 @@ export class Piece {
     constructor(pieceId = Math.floor(Math.random() * 7)) {
         this.pieceId = pieceId;
         this.rotationState = 0;
-        this.y = this.getName() == "I" ? -1 : 0;
-        this.x = 0;
+        this.y = this.getName() == "I" ? -2 : -1;
+        this.x = 3;
+    }
+    getPrintableWithWhiteSpace() {
+        let pieceMatrix = this.getMatrix();
+        if (pieceMatrix === null) {
+            throw new Error("piece matrix again");
+        }
+        let str = '';
+        for (let y = 0; y < pieceMatrix.length; y++) {
+            for (let x = 0; x < pieceMatrix[0].length; x++) {
+                str += (pieceMatrix[y][x] ? '[]' : '  ');
+            }
+            if (y < pieceMatrix.length - 1) str += '\n';
+        }
+        return str;
+    }
+    clone() {
+        let ret = new Piece();
+        ret.pieceId = this.pieceId;
+        ret.rotationState = this.rotationState;
+        ret.y = this.y;
+        ret.x = this.x;
+        return ret;
     }
     getName(pieceId = this.pieceId) {
         return ["L", "J", "O", "S", "Z", "T", "I"][pieceId];
@@ -185,6 +207,7 @@ export class Piece {
                     [0, 0, 1, 0],
                 ];
         }
+        return null;
     }
     rotate() {
         this.rotationState = (this.rotationState + 1) % this.getRotationStates();
