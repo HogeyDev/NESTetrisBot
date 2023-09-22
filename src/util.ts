@@ -4,6 +4,9 @@ export const FRAME_TIMELINES = {
     '15HZ': 'X...',
     '12HZ': 'X....',
     '10HZ': 'X.....',
+	'5HZ': 'X...........',
+	'2HZ': 'X.............................',
+	'1HZ': 'X...........................................................',
 }
 
 export function getFramesUntilPieceDrop(level: number) {

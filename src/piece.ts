@@ -35,6 +35,11 @@ export class Piece {
         }
         return str;
     }
+	rotate(rDir: number) {
+		this.rotationState += rDir;
+		this.rotationState += 4;
+		this.rotationState %= this.getRotationStates();
+	}
     clone() {
         let ret = new Piece();
         ret.pieceId = this.pieceId;
@@ -211,8 +216,8 @@ export class Piece {
         }
         return null;
     }
-    rotate() {
-        this.rotationState = (this.rotationState + 1) % this.getRotationStates();
-        return this.rotationState;
-    }
+    // rotate() {
+    //     this.rotationState = (this.rotationState + 1) % this.getRotationStates();
+    //     return this.rotationState;
+    // }
 }
