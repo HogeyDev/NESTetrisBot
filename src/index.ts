@@ -1,5 +1,5 @@
 import { Game, pieceRng } from './game';
-import { generateInputTimeline, getBestMove } from './movesearch';
+import { generateInputTimeline, getAllMovesWithEvaluation, getBestMove } from './movesearch';
 import { FRAME_TIMELINES } from './util';
 // import './interface'
 
@@ -9,19 +9,21 @@ let game = new Game();
 //     game.tick();
 // }
 function runInConsole() {
-    let inputs = generateInputTimeline(FRAME_TIMELINES["5HZ"], -4, 2);
-	let i = 0;
-	let oldPieceTotal = 0;
-	setInterval(() => {
-		if (game.totalPieces != oldPieceTotal) {
-			oldPieceTotal = game.totalPieces;
-			inputs = getBestMove(game);
-			i = 0;
-		}
-        game.tick(inputs[i] || '.');
+    let inputs: Array<any> = [];
+    let i = 0;
+    let oldPieceTotal = -1;
+    setInterval(() => {
+        if (game.totalPieces != oldPieceTotal) {
+            oldPieceTotal = game.totalPieces;
+            inputs = getBestMove(game);
+            i = 0;
+        }
+        game.tick(inputs[0][i] || '.');
         console.clear();
         console.log(game.getPrintable());
-		i++;
+        // console.log(getAllMovesWithEvaluation(game));
+        // console.log(inputs);
+        i++;
     }, 1000 / 60);
 }
 
