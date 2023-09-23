@@ -13,10 +13,21 @@ export class Board {
         return replaceAt(this.boardState, y * 10 + x, value.toString());
     }
     getMinoXY(x: number, y: number) {
+        if (y < 0 || y > 19) return 1;
+        if (x < 0 || x > 9) return 1;
         return parseInt(this.boardState[y * 10 + x]);
     }
     getMino(offset: number) {
         return parseInt(this.boardState[offset]);
+    }
+    from2D(matrix: Array<Array<number>>) {
+        let newBoardState = '';
+        for (let y = 0; y < matrix.length; y++) {
+            for (let x = 0; x < matrix[y].length; x++) {
+                newBoardState += matrix[y][x];
+            }
+        }
+        return (this.boardState = newBoardState);
     }
     get2D() {
         let ret: Array<Array<number>> = [];

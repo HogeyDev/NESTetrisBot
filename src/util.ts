@@ -4,16 +4,16 @@ export const FRAME_TIMELINES = {
     '15HZ': 'X...',
     '12HZ': 'X....',
     '10HZ': 'X.....',
-	'5HZ': 'X...........',
-	'2HZ': 'X.............................',
-	'1HZ': 'X...........................................................',
+    '5HZ': 'X...........',
+    '2HZ': 'X.............................',
+    '1HZ': 'X...........................................................',
 }
 
 export function getFramesUntilPieceDrop(level: number) {
     let frames: number = 0;
     if (level == 18) frames = 3;
     if (level >= 19 && level <= 28) frames = 2;
-    if (level >= 29) frames = 1;
+    if (level >= 29) frames = 0;
     return frames + 1;
 }
 

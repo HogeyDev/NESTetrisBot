@@ -4,8 +4,6 @@ import { Board } from './board';
 import { getFramesUntilPieceDrop } from './util';
 import { evaluationFunction } from './evaluation';
 
-export let pieceRng = new LFSR(0);
-
 export class Game {
     level: number;
     score: number;
@@ -18,7 +16,9 @@ export class Game {
     activePiece: Piece;
     previewPiece: Piece;
     isOver: boolean;
+    internalRng: LFSR;
     constructor(level = 18) {
+        this.internalRng = new LFSR(0);
         this.level = level;
         this.lines = 0;
         this.score = 0;
@@ -39,18 +39,18 @@ export class Game {
         }
         let str: string = '';
         // preview piece
-        console.log(this.previewPiece.getPrintableWithWhiteSpace());
-        let mat = this.previewPiece.getMatrix();
-        if (mat === null) throw new Error();
-        if (mat.length == 3) console.log();
-        console.log('='.repeat(20));
         let newTime = new Date().getTime()
         let realTime = (newTime - this.startingTime) / 1000;
         let deltaTime = (newTime - this.lastFrameTime) / 1000;
         this.lastFrameTime = newTime;
-        console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${Math.round(1 / deltaTime)}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}`);
+        console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${Math.round(1 / deltaTime)}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}\nPIECES: ${this.totalPieces}`);
         console.log('='.repeat(20));
         console.log(`EVALUATION: ${evaluationFunction(this.clone())}\nGAME OVER: ${this.isOver}`);
+        console.log('='.repeat(20));
+        console.log(this.previewPiece.getPrintableWithWhiteSpace());
+        let mat = this.previewPiece.getMatrix();
+        if (mat === null) throw new Error();
+        if (mat.length == 3) console.log();
         console.log('='.repeat(20));
         // str += this.previewPiece.getPrintableWithWhiteSpace();
         // board
@@ -86,19 +86,21 @@ export class Game {
         gameClone.activePiece = this.activePiece.clone();
         gameClone.previewPiece = this.previewPiece.clone();
         gameClone.isOver = this.isOver;
+        gameClone.internalRng = this.internalRng.clone();
         return gameClone;
     }
     getNewPiece() {
         this.totalPieces++;
         this.activePiece = this.previewPiece.clone();
-        return (this.previewPiece = new Piece(Math.floor(pieceRng.float() * 7)));
+        return (this.previewPiece = new Piece(Math.floor(this.internalRng.float() * 7)));
     }
     generatePiece() {
         this.totalPieces++;
-        return new Piece(Math.floor(pieceRng.float() * 7));
+        return new Piece(Math.floor(this.internalRng.float() * 7));
     }
     tick(movementCharacter: string) {
         if (this.isOver) return;
+        this.removeFilledLines();
         this.handleMovementCharacter(movementCharacter);
         let gravityFrames = getFramesUntilPieceDrop(this.level)
         if (this.activePiece.frames % gravityFrames === gravityFrames - 1) {
@@ -116,15 +118,29 @@ export class Game {
         this.activePiece.frames++;
         this.frames++;
 
-        this.removeFilledLines();
     }
     removeFilledLines() {
+        let rowsFilled = [];
         for (let y = 0; y < 20; y++) {
-            let rowFilled = false;
-            for (let x = 0; x < 20; x++) {
-                // TODO
+            let rowFilled = true;
+            for (let x = 0; x < 10; x++) {
+                if (!this.board.getMinoXY(x, y)) {
+                    rowFilled = false;
+                    break;
+                }
+            }
+            if (rowFilled) {
+                rowsFilled.push(y);
             }
         }
+        // console.log('Got Here!');
+        this.lines += rowsFilled.length;
+        let matrix = this.board.get2D();
+        for (let i = 0; i < rowsFilled.length; i++) {
+            matrix.splice(rowsFilled[i], 1);
+            matrix.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        }
+        this.board.from2D(matrix);
     }
     handleMovementCharacter(movementCharacter: string) {
         // L = Left

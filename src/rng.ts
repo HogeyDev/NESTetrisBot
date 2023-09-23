@@ -32,4 +32,12 @@ export class LFSR {
     setScalar(coeff: number) {
         this.coefficient = coeff;
     }
+    clone() {
+        let rngClone = new LFSR();
+        rngClone.state = this.state;
+        rngClone.coefficient = this.coefficient;
+        rngClone.offset = this.offset;
+        rngClone.modulo = this.modulo;
+        return rngClone;
+    }
 }

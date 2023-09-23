@@ -2,7 +2,8 @@ SRCFILES = $(shell find src | grep .ts)
 
 .PHONY: clean
 
-all: compile run
+# all: compile run
+all: runTsNode
 
 compile: $(SRCFILES)
 	tsc
@@ -16,6 +17,9 @@ electron:
 
 run:
 	node build/index.js
+
+runTsNode:
+	npx ts-node ./src/index.ts
 
 clean:
 	rm build/*.js

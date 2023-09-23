@@ -1,4 +1,3 @@
-import { Board } from './board';
 import { Game } from './game';
 
 export function evaluationFunction(game: Game) {
@@ -13,7 +12,25 @@ export function evaluationFunction(game: Game) {
                 break;
             }
         }
-        evaluation += ((20 - columnHeight) * (10 - x));
+        evaluation += ((20 - columnHeight) * x);
     }
+    evaluation -= game.lines * 3000;
+    // evaluation += game.totalPieces * 1000;
+    let totalHoleCount = 0;
+    for (let x = 0; x < 10; x++) {
+        for (let y = 19; y >= 0; y--) {
+            if (!game.board.getMinoXY(x, y)) {
+                if (
+                    game.board.getMinoXY(x - 1, y) &&
+                    game.board.getMinoXY(x + 1, y) &&
+                    game.board.getMinoXY(x, y - 1)
+                ) {
+                    totalHoleCount++;
+                }
+            }
+        }
+    }
+    evaluation += totalHoleCount * 100;
+    evaluation -= game.score;
     return evaluation;
 }
