@@ -13,8 +13,8 @@ export class Board {
         return replaceAt(this.boardState, y * 10 + x, value.toString());
     }
     getMinoXY(x: number, y: number) {
-        if (y < 0 || y > 19) return 1;
-        if (x < 0 || x > 9) return 1;
+        if (y < 0 || y > 19) return 0;
+        if (x < 0 || x > 9) return 0;
         return parseInt(this.boardState[y * 10 + x]);
     }
     getMino(offset: number) {

@@ -1,0 +1,5 @@
+1. Add better eval?
+2. Tucks
+3. Spins
+4. SpinTucks
+5. Incorporate piece range into some eval? maybe move generation?

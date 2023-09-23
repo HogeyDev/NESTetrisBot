@@ -1,7 +1,7 @@
 import { LFSR } from './rng';
 import { Piece } from './piece';
 import { Board } from './board';
-import { getFramesUntilPieceDrop } from './util';
+import { getFramesUntilPieceDrop, baseScoringValues } from './util';
 import { evaluationFunction } from './evaluation';
 
 export class Game {
@@ -17,8 +17,11 @@ export class Game {
     previewPiece: Piece;
     isOver: boolean;
     internalRng: LFSR;
-    constructor(level = 18) {
-        this.internalRng = new LFSR(0);
+    seed: number;
+    linesLastCleared: number;
+    constructor(level = 18, seed = 0) {
+        this.seed = seed;
+        this.internalRng = new LFSR(seed);
         this.level = level;
         this.lines = 0;
         this.score = 0;
@@ -30,6 +33,7 @@ export class Game {
         this.totalPieces = 0;
         this.lastFrameTime = this.startingTime;
         this.isOver = false;
+        this.linesLastCleared = 0;
     }
     getPrintable() {
         console.log(`Board State: ${this.board.boardState}`);
@@ -43,9 +47,10 @@ export class Game {
         let realTime = (newTime - this.startingTime) / 1000;
         let deltaTime = (newTime - this.lastFrameTime) / 1000;
         this.lastFrameTime = newTime;
-        console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${Math.round(1 / deltaTime)}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}\nPIECES: ${this.totalPieces}`);
+        console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${Math.round(1 / deltaTime)}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}\nPIECES: ${this.totalPieces}\nLASTLINECLEAR: ${this.linesLastCleared}`);
         console.log('='.repeat(20));
-        console.log(`EVALUATION: ${evaluationFunction(this.clone())}\nGAME OVER: ${this.isOver}`);
+        console.log(`SEED: ${this.seed}\nEVALUATION: ${evaluationFunction(this.clone())
+            } \nGAME OVER: ${this.isOver} `);
         console.log('='.repeat(20));
         console.log(this.previewPiece.getPrintableWithWhiteSpace());
         let mat = this.previewPiece.getMatrix();
@@ -71,7 +76,8 @@ export class Game {
             }
         }
 
-        return new Board().toString(str);
+        console.log(new Board().toString(str));
+        console.log('1 2 3 4 5 6 7 8 9 0');
     }
     clone() {
         let gameClone = new Game();
@@ -87,6 +93,7 @@ export class Game {
         gameClone.previewPiece = this.previewPiece.clone();
         gameClone.isOver = this.isOver;
         gameClone.internalRng = this.internalRng.clone();
+        gameClone.linesLastCleared = this.linesLastCleared;
         return gameClone;
     }
     getNewPiece() {
@@ -100,7 +107,6 @@ export class Game {
     }
     tick(movementCharacter: string) {
         if (this.isOver) return;
-        this.removeFilledLines();
         this.handleMovementCharacter(movementCharacter);
         let gravityFrames = getFramesUntilPieceDrop(this.level)
         if (this.activePiece.frames % gravityFrames === gravityFrames - 1) {
@@ -118,6 +124,7 @@ export class Game {
         this.activePiece.frames++;
         this.frames++;
 
+        this.removeFilledLines();
     }
     removeFilledLines() {
         let rowsFilled = [];
@@ -141,6 +148,8 @@ export class Game {
             matrix.unshift([0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
         }
         this.board.from2D(matrix);
+        // this.score += baseScoringValues[rowsFilled.length] * (this.level + 1);
+        if (rowsFilled.length > 0) this.linesLastCleared = rowsFilled.length;
     }
     handleMovementCharacter(movementCharacter: string) {
         // L = Left
@@ -162,7 +171,7 @@ export class Game {
             case 'G': this.tryXMovement(1); this.tryRotation(-1); break;
             case '.': break;
             default: {
-                throw new Error(`Unknown Character: ${movementCharacter}`);
+                throw new Error(`Unknown Character: ${movementCharacter} `);
             }
         }
     }
