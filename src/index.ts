@@ -1,9 +1,12 @@
 import { Game } from './game';
 import { getBestMove } from './movesearch';
 import { searchDepth } from './params';
-import { LFSR } from './rng';
+import { startElectron } from './interface';
+import './server'; import { app, BrowserWindow } from 'electron';
+
 
 const evalMax = Infinity;
+let window;
 
 let game = new Game(29, Math.round(Math.random() * 101010));
 // let game = new Game(18);
@@ -37,4 +40,11 @@ function runInConsole() {
 }
 
 let fullSecondBuffer = true;
-setTimeout(runInConsole, (fullSecondBuffer ? 1000 : 0));
+let consoleBrowserSwitch = false; // false = console; true = browser
+if (consoleBrowserSwitch) {
+    setTimeout(() => {
+        window = startElectron();
+    }, (fullSecondBuffer ? 1000 : 0));
+} else {
+    setTimeout(runInConsole, (fullSecondBuffer ? 1000 : 0));
+}

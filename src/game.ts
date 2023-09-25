@@ -2,7 +2,7 @@ import { LFSR } from './rng';
 import { Piece } from './piece';
 import { Board } from './board';
 import { getFramesUntilPieceDrop, baseScoringValues } from './util';
-import { evaluationFunction } from './evaluation';
+import { evaluationFunction, getEvaluationPartials } from './evaluation';
 
 export class Game {
     level: number;
@@ -36,7 +36,7 @@ export class Game {
         this.linesLastCleared = 0;
     }
     getPrintable() {
-        console.log(`Board State: ${this.board.boardState}`);
+        // console.log(`Board State: ${this.board.boardState}`);
         let pieceMatrix: Array<Array<number>> | null = this.activePiece.getMatrix();
         if (pieceMatrix === null) {
             throw new Error("Cannot Get a Printable Board Because Piece Matrix is Null");
@@ -49,8 +49,9 @@ export class Game {
         this.lastFrameTime = newTime;
         console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${Math.round(1 / deltaTime)}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}\nPIECES: ${this.totalPieces}\nLASTLINECLEAR: ${this.linesLastCleared}`);
         console.log('='.repeat(20));
-        console.log(`SEED: ${this.seed}\nEVALUATION: ${evaluationFunction(this.clone())
-            } \nGAME OVER: ${this.isOver} `);
+        console.log(`SEED: ${this.seed}\nEVALUATION:`);
+        console.log(getEvaluationPartials(this.clone()));
+        console.log(`\nGAME OVER: ${this.isOver}`);
         console.log('='.repeat(20));
         console.log(this.previewPiece.getPrintableWithWhiteSpace());
         let mat = this.previewPiece.getMatrix();

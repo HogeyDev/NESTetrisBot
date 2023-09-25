@@ -1,3 +1,5 @@
+const socket = io();
+
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
@@ -27,3 +29,7 @@ function drawBoard(board) {
 
 let board = '00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001111000';
 drawBoard(board);
+
+socket.on('alert-for-me', () => {
+    alert("Hello, World!");
+});

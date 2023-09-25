@@ -2,8 +2,9 @@ SRCFILES = $(shell find src | grep .ts)
 
 .PHONY: clean
 
-# all: compile run
 all: runTsNode
+allJS: compile run
+gui: compile electron
 
 compile: $(SRCFILES)
 	tsc

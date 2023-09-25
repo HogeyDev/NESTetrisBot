@@ -27,3 +27,8 @@ export const baseScoringValues = [
     300,
     1200,
 ];
+
+export function getScareHeight(level: number) {
+    if (level >= 16 && level <= 18) return 12;
+    return 0;
+}
