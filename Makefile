@@ -6,6 +6,9 @@ all: runTsNode
 allJS: compile run
 gui: compile electron
 
+profile: compile
+	node --trace-ic ./node_modules/typescript/lib/tsc.js --generateCpuProfile profile.cpuprofile -p tsconfig.json
+
 compile: $(SRCFILES)
 	tsc
 

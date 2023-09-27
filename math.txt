@@ -1,0 +1,8 @@
+HeightOfTap (Minos from Bottom)
+TapSpeed (Taps per Second)
+G (Frames per Mino)
+
+TimeToSide = 4 / TapSpeed
+TimeToCollision = (20 - HeightOfTap) * G
+
+HeightOfTap = (20 * G - 4 / TapSpeed) / G

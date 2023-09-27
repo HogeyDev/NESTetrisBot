@@ -1,3 +1,6 @@
+import { Game } from './game';
+import { Piece } from './piece';
+
 export const FRAME_TIMELINES = {
     '30HZ': 'X.',
     '20HZ': 'X..',
@@ -7,7 +10,7 @@ export const FRAME_TIMELINES = {
     '5HZ': 'X...........',
     '2HZ': 'X.............................',
     '1HZ': 'X...........................................................',
-}
+};
 
 export function getFramesUntilPieceDrop(level: number) {
     let frames: number = 0;
@@ -27,6 +30,21 @@ export const baseScoringValues = [
     300,
     1200,
 ];
+
+export function maximumFourTap(level: number = 18) {
+    let maxHeightFound: boolean = false;
+    let maxHeight: number = 0;
+    while (!maxHeightFound) {
+        let testGame = new Game();
+        testGame.activePiece = new Piece(6 /* "I" */);
+        for (let i = 0; i < maxHeight; i++) {
+            testGame.board.setMinoXY('1', 8, 20 - i);
+        }
+        console.log('TESTGAME: ');
+        console.log(testGame.getPrintable());
+    }
+    return maxHeight;
+}
 
 export function getScareHeight(level: number) {
     if (level >= 16 && level <= 18) return 12;

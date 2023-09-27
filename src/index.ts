@@ -1,6 +1,7 @@
 import { Game } from './game';
 import { getBestMove } from './movesearch';
 import { searchDepth } from './params';
+import { maximumFourTap } from './util';
 import { startElectron } from './interface';
 import './server'; import { app, BrowserWindow } from 'electron';
 
@@ -48,3 +49,6 @@ if (consoleBrowserSwitch) {
 } else {
     setTimeout(runInConsole, (fullSecondBuffer ? 1000 : 0));
 }
+
+maximumFourTap();
+throw new Error('error');
