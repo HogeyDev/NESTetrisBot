@@ -85,11 +85,16 @@ export function testMoveSequence(game: Game, inputTimeline: string) {
 
 export function generatePossibleMoves(game: Game) {
     let possibleMoves = [];
-    for (let rotationState = -1; rotationState <= 2; rotationState++) {
+	
+	let pieceName = game.activePiece.getName();
+	const rotationStart = pieceName == 'O' ? 0 : -1;
+	const rotationEnd = ((pieceName == 'O' || pieceName == 'I' || pieceName = 'S' || pieceName = 'Z') ? 0 : 2);
+    
+	for (let rotationState = rotationStart; rotationState <= rotationEnd; rotationState++) {
         for (let xOffset = -5; xOffset <= 4; xOffset++) {
-            if (isLegalPlacement(game.clone(), xOffset, rotationState)) {
+            // if (isLegalPlacement(game.clone(), xOffset, rotationState)) {
                 possibleMoves.push(generateInputTimeline(tapTimeline, xOffset, rotationState));
-            }
+            // }
         }
     }
     return possibleMoves;
@@ -100,11 +105,11 @@ export function getStateAfterMovement(game: Game, inputTimeline: string) {
 }
 
 export function isLegalPlacement(game: Game, xOffset: number, rotationState: number) {
-    // return true;
+    return true;
     let gameCopy = game.clone();
     return !gameCopy.pieceCollidingWithBoard();
 }
 
 export function getPossibleTucks(gameReal: Game) {
-    let game: Game = gameReal.clone();
+    // let game: Game = gameReal.clone();
 }

@@ -106,27 +106,33 @@ export class Game {
         this.totalPieces++;
         return new Piece(Math.floor(this.internalRng.float() * 7));
     }
+	tickHidden(xOffset: number, rotationState: number) {
+		
+	}
     tick(movementCharacter: string) {
         if (this.isOver) return;
-        this.handleMovementCharacter(movementCharacter);
+        if (movementCharacter != '.') this.handleMovementCharacter(movementCharacter);
         let gravityFrames = getFramesUntilPieceDrop(this.level)
         if (this.activePiece.frames % gravityFrames === gravityFrames - 1) {
-            if (this.pieceCanDrop()) {
-                this.activePiece.y++;
-            } else {
-                this.board.addPieceToBoard(this.activePiece);
-                this.getNewPiece();
-                if (this.toppedOut()) {
-                    this.isOver = true;
-                    return;
-                }
-            }
+            this.tryPieceDrop();
         }
+		if (this.toppedOut()) {
+			this.isOver = true;
+			return;
+		}
         this.activePiece.frames++;
         this.frames++;
 
         this.removeFilledLines();
     }
+	tryPieceDrop() {
+		this.activePiece.y++;
+		if (this.pieceCollidingWithBoard()) {
+			this.activePiece.y--;
+			this.board.addPieceToBoard(this.activePiece);
+			this.getNewPiece();
+		}
+	}
     removeFilledLines() {
         let rowsFilled = [];
         for (let y = 0; y < 20; y++) {

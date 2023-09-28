@@ -5,6 +5,7 @@ import { startElectron } from './interface';
 import { generateInputTimeline } from './timeline';
 import { Piece } from './piece';
 import { getMaximumNTap } from './util';
+const profiler = require('v8-profiler');
 
 
 const evalMax = Infinity;
@@ -59,10 +60,11 @@ function tallTest() {
 
 let fullSecondBuffer = true;
 let consoleBrowserSwitch = false; // false = console; true = browser
-if (consoleBrowserSwitch) {
-    setTimeout(() => {
-        window = startElectron();
-    }, (fullSecondBuffer ? 1000 : 0));
-} else {
-    setTimeout(runInConsole, (fullSecondBuffer ? 1000 : 0));
-}
+// if (consoleBrowserSwitch) {
+//     setTimeout(() => {
+//         window = startElectron();
+//     }, (fullSecondBuffer ? 1000 : 0));
+// } else {
+//     setTimeout(runInConsole, (fullSecondBuffer ? 1000 : 0));
+// }
+

@@ -88,5 +88,6 @@ export function getEvaluationPartials(gameReal: Game) {
     evaluation.total += evaluation.linesCleared;
     evaluation.total += evaluation.wells;
     evaluation.total += evaluation.isOver;
+	evaluation.total += isTetrisReady();
     return evaluation;
 }
