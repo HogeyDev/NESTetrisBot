@@ -1,16 +1,7 @@
 import { Game } from './game';
+import { generateInputTimeline } from './timeline';
+import { tapTimeline } from './params';
 import { Piece } from './piece';
-
-export const FRAME_TIMELINES = {
-    '30HZ': 'X.',
-    '20HZ': 'X..',
-    '15HZ': 'X...',
-    '12HZ': 'X....',
-    '10HZ': 'X.....',
-    '5HZ': 'X...........',
-    '2HZ': 'X.............................',
-    '1HZ': 'X...........................................................',
-};
 
 export function getFramesUntilPieceDrop(level: number) {
     let frames: number = 0;
@@ -31,19 +22,31 @@ export const baseScoringValues = [
     1200,
 ];
 
-export function maximumFourTap(level: number = 18) {
+export function getMaximumNTap(numberOfTaps: number = 4, level: number = 18) {
     let maxHeightFound: boolean = false;
     let maxHeight: number = 0;
-    while (!maxHeightFound) {
+    let inputSequence = generateInputTimeline(tapTimeline, 4, 1);
+    while (!maxHeightFound && maxHeight < 20) {
         let testGame = new Game();
         testGame.activePiece = new Piece(6 /* "I" */);
         for (let i = 0; i < maxHeight; i++) {
-            testGame.board.setMinoXY('1', 8, 20 - i);
+            testGame.board.setMinoXY(1, 8, 19 - i);
         }
-        console.log('TESTGAME: ');
-        console.log(testGame.getPrintable());
+        // console.log(testGame.board.boardState);
+
+        let pieceCount: number = testGame.totalPieces;
+        let i = 0;
+        while (pieceCount == testGame.totalPieces) {
+            testGame.tick(inputSequence[i] || '.');
+            i++;
+        }
+        if (!testGame.board.getMinoXY(9, 19)) {
+            maxHeightFound = true;
+            break;
+        }
+        maxHeight++;
     }
-    return maxHeight;
+    return Math.max(0, maxHeight - 1);
 }
 
 export function getScareHeight(level: number) {
