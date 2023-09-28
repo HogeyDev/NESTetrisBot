@@ -88,7 +88,7 @@ export function generatePossibleMoves(game: Game) {
 	
 	let pieceName = game.activePiece.getName();
 	const rotationStart = pieceName == 'O' ? 0 : -1;
-	const rotationEnd = ((pieceName == 'O' || pieceName == 'I' || pieceName = 'S' || pieceName = 'Z') ? 0 : 2);
+	const rotationEnd = pieceName == 'O' || pieceName == 'I' || pieceName == 'S' || pieceName == 'Z' ? 0 : 2;
     
 	for (let rotationState = rotationStart; rotationState <= rotationEnd; rotationState++) {
         for (let xOffset = -5; xOffset <= 4; xOffset++) {
@@ -111,5 +111,6 @@ export function isLegalPlacement(game: Game, xOffset: number, rotationState: num
 }
 
 export function getPossibleTucks(gameReal: Game) {
-    // let game: Game = gameReal.clone();
+    let game: Game = gameReal.clone();
+    // let tucks = 
 }
