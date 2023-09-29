@@ -2,6 +2,7 @@ import { evaluationFunction } from './evaluation';
 import { Game } from './game';
 import { tapTimeline } from './params';
 import { generateInputTimeline } from './timeline';
+import { getMaximumNTap } from './util';
 
 export function getBestMove(game: Game, depth: number = 2) {
     // let possibleMoves = generatePossibleMoves(game);
@@ -85,15 +86,15 @@ export function testMoveSequence(game: Game, inputTimeline: string) {
 
 export function generatePossibleMoves(game: Game) {
     let possibleMoves = [];
-	
-	let pieceName = game.activePiece.getName();
-	const rotationStart = pieceName == 'O' ? 0 : -1;
-	const rotationEnd = pieceName == 'O' || pieceName == 'I' || pieceName == 'S' || pieceName == 'Z' ? 0 : 2;
-    
-	for (let rotationState = rotationStart; rotationState <= rotationEnd; rotationState++) {
+
+    let pieceName = game.activePiece.getName();
+    const rotationStart = pieceName == 'O' ? 0 : -1;
+    const rotationEnd = pieceName == 'O' || pieceName == 'I' || pieceName == 'S' || pieceName == 'Z' ? 0 : 2;
+
+    for (let rotationState = rotationStart; rotationState <= rotationEnd; rotationState++) {
         for (let xOffset = -5; xOffset <= 4; xOffset++) {
             // if (isLegalPlacement(game.clone(), xOffset, rotationState)) {
-                possibleMoves.push(generateInputTimeline(tapTimeline, xOffset, rotationState));
+            possibleMoves.push(generateInputTimeline(tapTimeline, xOffset, rotationState));
             // }
         }
     }
@@ -110,7 +111,30 @@ export function isLegalPlacement(game: Game, xOffset: number, rotationState: num
     return !gameCopy.pieceCollidingWithBoard();
 }
 
-export function getPossibleTucks(gameReal: Game) {
-    let game: Game = gameReal.clone();
-    // let tucks = 
+export function getPossibleTucksAndSpins() {
+
+}
+
+export function getPossibleTucks(gameReal: Game, currentInputTimelines: Array<string>) {
+    let tucks: Array<string> = [];
+    for (let inputTimelineIndex = 0; inputTimelineIndex < currentInputTimelines.length; inputTimelineIndex++) {
+        let game: Game = gameReal.clone();
+        let inputTimeline = currentInputTimelines[inputTimelineIndex];
+        for (let inputIndex = 0; inputIndex < inputTimeline.length; inputIndex++) {
+            game.tick(inputTimeline[inputIndex]);
+
+            if (
+                inputTimeline[inputIndex] != '.' &&
+                game.isGravityFrame()
+            ) {
+                for (let x = -1; x <= 1; x += 2) {
+                    let subGame = game.clone();
+                    if (subGame.tryXMovement(x)) {
+                        inputTimeline
+                    }
+                }
+            }
+        }
+    }
+    return tucks;
 }

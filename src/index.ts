@@ -6,11 +6,14 @@ import { generateInputTimeline } from './timeline';
 import { Piece } from './piece';
 import { getMaximumNTap } from './util';
 
-
 const evalMax = Infinity;
 let window;
 
-let game = new Game(startingLevel, Math.round(Math.random() * 101010));
+function getNewStartingBoard() {
+    return new Game(startingLevel, Math.round(Math.random() * 101010));
+}
+
+let game = getNewStartingBoard();
 // let game = new Game(18);
 
 // function tick() {
@@ -34,7 +37,7 @@ function runInConsole() {
         // console.log(inputs);
         if (game.isOver || inputs[1] > evalMax) {
             clearInterval(mainLoop);
-            game = new Game(29, Math.round(Math.random() * 101010));
+            game = getNewStartingBoard();
             runInConsole();
         }
         i++;
@@ -66,4 +69,3 @@ if (consoleBrowserSwitch) {
 } else {
     setTimeout(runInConsole, (fullSecondBuffer ? 1000 : 0));
 }
-

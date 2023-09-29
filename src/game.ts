@@ -50,7 +50,7 @@ export class Game {
         console.log(`FRAMES: ${this.frames}\nREALTIME: ${realTime}s\nFPS: ${Math.round(1 / deltaTime)}\nLEVEL: ${this.level}\nLINES: ${this.lines}\nSCORE: ${this.score}\nPIECES: ${this.totalPieces}\nLASTLINECLEAR: ${this.linesLastCleared}`);
         console.log('='.repeat(20));
         console.log(`SEED: ${this.seed}\nEVALUATION:`);
-        console.log(getEvaluationPartials(this.clone()));
+        // console.log(getEvaluationPartials(this.clone()));
         console.log(`\nGAME OVER: ${this.isOver}`);
         console.log('='.repeat(20));
         console.log(this.previewPiece.getPrintableWithWhiteSpace());
@@ -106,33 +106,36 @@ export class Game {
         this.totalPieces++;
         return new Piece(Math.floor(this.internalRng.float() * 7));
     }
-	tickHidden(xOffset: number, rotationState: number) {
-		
-	}
+    tickHidden(xOffset: number, rotationState: number) {
+
+    }
+    isGravityFrame() {
+        let gravityFrames = getFramesUntilPieceDrop(this.level);
+        return (this.activePiece.frames % gravityFrames === gravityFrames - 1);
+    }
     tick(movementCharacter: string) {
         if (this.isOver) return;
         if (movementCharacter != '.') this.handleMovementCharacter(movementCharacter);
-        let gravityFrames = getFramesUntilPieceDrop(this.level)
-        if (this.activePiece.frames % gravityFrames === gravityFrames - 1) {
+        if (this.isGravityFrame()) {
             this.tryPieceDrop();
         }
-		if (this.toppedOut()) {
-			this.isOver = true;
-			return;
-		}
+        if (this.toppedOut()) {
+            this.isOver = true;
+            return;
+        }
         this.activePiece.frames++;
         this.frames++;
 
         this.removeFilledLines();
     }
-	tryPieceDrop() {
-		this.activePiece.y++;
-		if (this.pieceCollidingWithBoard()) {
-			this.activePiece.y--;
-			this.board.addPieceToBoard(this.activePiece);
-			this.getNewPiece();
-		}
-	}
+    tryPieceDrop() {
+        this.activePiece.y++;
+        if (this.pieceCollidingWithBoard()) {
+            this.activePiece.y--;
+            this.board.addPieceToBoard(this.activePiece);
+            this.getNewPiece();
+        }
+    }
     removeFilledLines() {
         let rowsFilled = [];
         for (let y = 0; y < 20; y++) {
@@ -184,8 +187,11 @@ export class Game {
     }
     tryXMovement(xDir: number) {
         this.activePiece.x += xDir;
-        if (this.pieceCollidingWithBoard())
+        if (this.pieceCollidingWithBoard()) {
             this.activePiece.x -= xDir;
+            return false;
+        }
+        return true;
     }
     tryRotation(rDir: number) {
         this.activePiece.rotate(rDir);

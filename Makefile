@@ -14,7 +14,7 @@ compile: $(SRCFILES)
 
 live:
 	tsc -w &
-	nodemon build/index.js
+	NODE_OPTIONS="--inspect" nodemon build/index.js
 
 electron:
 	electron build/index.js

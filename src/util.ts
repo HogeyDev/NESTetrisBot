@@ -22,15 +22,15 @@ export const baseScoringValues = [
     1200,
 ];
 
-export function getMaximumNTap(numberOfTaps: number = 4, level: number = 18) {
+export function getMaximumNTap(numberOfTaps: number, level: number) {
     let maxHeightFound: boolean = false;
     let maxHeight: number = 0;
-    let inputSequence = generateInputTimeline(tapTimeline, 4, 1);
+    let inputSequence = generateInputTimeline(tapTimeline, -numberOfTaps, 1);
     while (!maxHeightFound && maxHeight < 20) {
         let testGame = new Game();
         testGame.activePiece = new Piece(6 /* "I" */);
         for (let i = 0; i < maxHeight; i++) {
-            testGame.board.setMinoXY(1, 8, 19 - i);
+            testGame.board.setMinoXY(1, 1, 19 - i);
         }
         // console.log(testGame.board.boardState);
 
@@ -40,7 +40,7 @@ export function getMaximumNTap(numberOfTaps: number = 4, level: number = 18) {
             testGame.tick(inputSequence[i] || '.');
             i++;
         }
-        if (!testGame.board.getMinoXY(9, 19)) {
+        if (!testGame.board.getMinoXY(0, 19)) {
             maxHeightFound = true;
             break;
         }
@@ -49,7 +49,11 @@ export function getMaximumNTap(numberOfTaps: number = 4, level: number = 18) {
     return Math.max(0, maxHeight - 1);
 }
 
+let lastScareHeightHeight = 0;
+let lastScareHeightLevel = -Infinity;
 export function getScareHeight(level: number) {
-    if (level >= 16 && level <= 18) return 12;
-    return 0;
+    if (lastScareHeightLevel == level) return lastScareHeightHeight;
+    lastScareHeightHeight = Math.floor(0.75 * getMaximumNTap(-5, level));
+    lastScareHeightLevel = level;
+    return lastScareHeightHeight;
 }
